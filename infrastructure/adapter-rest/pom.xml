@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.acme</groupId>
+        <artifactId>quarkus-infrastructure</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>adapter-rest</artifactId>
+    <name>REST Adapter</name>
+    <description>REST Adpaters implementation</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.acme</groupId>
+            <artifactId>application</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Annotation based Rest controllers with JSON serialization / desearialization -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-jackson</artifactId>
+        </dependency>
+
+        <!-- Add OpenAPI spec to the project and helps with the generation of both schema and Swagger UI -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
+        </dependency>
+
+        <!-- Quarkus CDI based build-time dependency injection -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-arc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-config-yaml</artifactId>
+            <scope>test</scope>
+        </dependency>       
+
+        <!-- Adds mockito framework for testing purposes -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit5-mockito</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Testing and validating REST services -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Lombok :) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+       <!--  <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-mapstruct-binding</artifactId>
+        </dependency>
+ -->
+        <!-- Utility for easy annotation based mapper creation -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+        </dependency>
+        
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.smallrye</groupId>
+                <artifactId>jandex-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.13.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
+                            <generatorName>jaxrs-spec</generatorName>
+                            <additionalProperties>basePathAPI=/api/v1</additionalProperties>
+                            <supportingFilesToGenerate>false</supportingFilesToGenerate>
+                            <generateApis>true</generateApis>
+                            <modelNameSuffix>DTO</modelNameSuffix>
+                            <apiNameSuffix>API</apiNameSuffix>
+                            <templateDirectory>JavaJaxRS/spec</templateDirectory>
+                            <!-- <configHelp>true</configHelp> -->
+                            <configOptions>
+                                <modelPackage>com.acme.infrastructure.rest.dto</modelPackage>
+                                <apiPackage>com.acme.infrastructure.rest.api</apiPackage>
+                                <packageName>com.acme.infrastructure.rest</packageName>
+                                <useSwaggerAnnotations>true</useSwaggerAnnotations>
+                                <additionalModelTypeAnnotations>@lombok.Builder</additionalModelTypeAnnotations>                                
+                                <library>quarkus</library>
+                                <interfaceOnly>true</interfaceOnly>
+                                <returnResponse>true</returnResponse>
+                                <sourceFolder>src/java</sourceFolder>
+                                <implFolder>src/java</implFolder>
+                                <useBeanValidation>false</useBeanValidation>
+                                <skipValidateSpec>false</skipValidateSpec>
+                                <removeOperationIdPrefix>true</removeOperationIdPrefix>
+                                <generateModelDocumentation>true</generateModelDocumentation>
+                                <generateApiDocumentation>true</generateApiDocumentation>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

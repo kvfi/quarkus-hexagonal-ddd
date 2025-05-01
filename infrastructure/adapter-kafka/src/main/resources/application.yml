@@ -1,0 +1,31 @@
+quarkus:
+  kafka:
+    devservices:
+      topic-partitions:
+        loans-in: 1
+        loans-out: 1
+
+kafka:
+  apicurio:
+    registry:
+      auto-register: true
+
+mp:
+  messaging:
+    incoming:
+      loans-in:
+        # connector: smallrye-kafka
+        topic: loans-in
+        # value:
+        #  deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
+    outgoing:
+      loans-out:
+        # connector: smallrye-kafka 
+        topic: loans-out   
+        # value:
+        #  serializer: io.apicurio.registry.serde.avro.AvroKafkaSerializer
+
+"%prod":
+  kafka:
+    bootstrap:
+      servers: ${kafka_host}:9092
